@@ -36,6 +36,8 @@ def get_csv_bank_statements(folder_path:str, account_owner:Optional[str]=None) -
     """
     files = glob.glob(os.path.join(folder_path, "*.csv"))
     df = pd.concat([pd.read_csv(f, encoding='latin1', sep=';', decimal=',') for f in files])
+    # Remove rows where 'Status' is not 'Udført'
+    df = df[df['Status'] == 'Udført']
     # Select only the required columns
     df = df[['Dato', 'Tekst', 'Beløb']]
     df = df.iloc[:, :3].rename(columns={'Dato':'Date', 'Tekst':'Text', 'Beløb':'Amount'})
